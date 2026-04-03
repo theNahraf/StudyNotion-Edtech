@@ -1,10 +1,8 @@
-import logo from './logo.svg';
 import './App.css';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
-import { useState } from 'react';
 import Error from './pages/Error';
 import Footer from './Components/common/Footer';
 import Navbar from './Components/common/Navbar';
@@ -24,11 +22,14 @@ import { ACCOUNT_TYPE } from './utils/constants';
 import EnrolledCourses from './Components/core/Dashboard/EnrolledCourses';
 import ChatXPro from './pages/Chatxpro';
 import AddCourse from './Components/core/Dashboard/AddCourse/index';
-// import CourseTable from './Components/core/Dashboard/InstructorCourse.jsx/CourseTable';
 import MyCourses from './Components/core/Dashboard/InstructorCourse.jsx/MyCourses';
 import EditCourse from './Components/core/Dashboard/EditCourse';
 import Catalog from './pages/Catalog';
 import CourseDetails from './pages/CourseDetails';
+import ViewCourse from './pages/ViewCourse';
+import VideoDetails from './Components/core/ViewCourse/VideoDetails';
+import Instructor from './Components/core/Dashboard/InstructorDashboard/Instructor';
+
 function App() {
   const {user} = useSelector((state)=>state.profile)
 
@@ -119,6 +120,7 @@ function App() {
           user?.user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
             <>
             
+            <Route path='dashboard/instructor' element={<Instructor/>} />
             <Route path='dashboard/add-course' element={<AddCourse/>} />
             <Route path='dashboard/my-courses' element={<MyCourses/>} />
             <Route path='dashboard/edit-course/:courseId' element={<EditCourse/>} />
@@ -128,10 +130,27 @@ function App() {
           )
         }
 
-        </Route> 
+        </Route>
+
+        {/* View Course Routes for enrolled students */}
+        <Route element={
+          <PrivateRoute>
+            <ViewCourse/>
+          </PrivateRoute>
+        }>
+          {
+            user?.user?.accountType === ACCOUNT_TYPE.STUDENT && (
+              <Route
+                path="view-course/:courseId/section/:sectionId/sub-section/:subSectionId"
+                element={<VideoDetails/>}
+              />
+            )
+          }
+        </Route>
+
         <Route path='*' element={<Error/>}/>
       </Routes>
-      {/* <Footer/> */}
+      <Footer/>
     </div>
   );
 }

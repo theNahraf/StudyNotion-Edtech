@@ -1,21 +1,22 @@
+require("dotenv").config();
 const express = require("express");
 const server = express();
 const cookieParser = require("cookie-parser");
-//import routeer
+const cors = require("cors");
+const fileUpload = require("express-fileupload");
 
+//import routes
 const courseRoutes = require("./routes/Course");
 const userRoutes = require("./routes/User");
-const profileRoutes= require("./routes/Profile");
+const profileRoutes = require("./routes/Profile");
 const paymentRoutes = require("./routes/Payments");
-//import db
-const dbConnect = require("./config/database");
-const {cloudinaryConnect} = require("./config/cloudinary");
-const fileUpload = require("express-fileupload")
-const PORT = process.env.PORT || 5000;
 const contactUsRoute = require("./routes/Contact");
 
-require("dotenv").config();
-const cors = require("cors");
+//import db & config
+const dbConnect = require("./config/database");
+const {cloudinaryConnect} = require("./config/cloudinary");
+
+const PORT = process.env.PORT || 5000;
 
 
 

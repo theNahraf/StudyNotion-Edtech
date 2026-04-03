@@ -87,7 +87,7 @@ exports.categoryPageDetails = async(req, res)=>{
         if(!selectedCategory){
             console.log("Category not found")
             return res.status(404).json({
-                success:flase,
+                success:false,
                 message: "Category not found "
             })
         }

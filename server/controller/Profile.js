@@ -1,9 +1,11 @@
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+const Course = require("../models/Course");
+const CourseProgress = require("../models/CourseProgress");
 const {uploadImageToCloudinary} = require("../Utils/imageUploader")
 require("dotenv").config();
 
-const { convertSecondsToDuration } = require("../utils/convertSecondsToDuration")
+const { convertSecondsToDuration } = require("../Utils/convertSecondsToDuration")
 
 
 
@@ -25,8 +27,11 @@ exports.updateProfile = async(req,res)=>{
                 message:"all field are reqeuired"
             })
         }
+        //update user
+        userDetails.firstName = firstName;
+        await userDetails.save();
+
         //find profile
-        const userDetails = await User.findById(id);
         const profileId = userDetails.additionalDetails;
         const profileDetails = await Profile.findById(profileId);
 
@@ -39,12 +44,13 @@ exports.updateProfile = async(req,res)=>{
         //db me entry
         await profileDetails.save();
 
+        const updatedUserDetails = await User.findById(id).populate("additionalDetails").exec();
+
         //return res
         return res.status(200).json({
             success:true,
             message:"Profile Updated Successfully",
-            profileDetails,
-
+            updatedUserDetails,
         })
 
     }catch(error){
@@ -227,17 +233,39 @@ exports.getEnrolledCourses = async(req, res)=>{
             success:true,
             data:userDetails.courses,
         })
-    }catch(error){
-        res.send({
-            success:false,
-            error:error.message
-
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
         })
     }
 }
 
+exports.instructorDashboard = async (req, res) => {
+    try {
+        const courseDetails = await Course.find({ instructor: req.user.id })
 
+        const courseData = courseDetails.map((course) => {
+            const totalStudentsEnrolled = course.studentEnrolled.length
+            const totalAmountGenerated = totalStudentsEnrolled * course.price
 
+            // Create a new object with the additional fields
+            const courseDataWithStats = {
+                _id: course._id,
+                courseName: course.courseName,
+                courseDescription: course.courseDescription,
+                // Include other course details as needed
+                totalStudentsEnrolled,
+                totalAmountGenerated,
+            }
 
+            return courseDataWithStats
+        })
 
+        res.status(200).json({ success: true, courses: courseData })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ success: false, message: "Server Error" })
+    }
+}
 

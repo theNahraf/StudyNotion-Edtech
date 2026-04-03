@@ -109,7 +109,7 @@ export const createSection  = async(data, token)=>{
         result = response?.data?.updatedCourseDetails
     }catch(error){
 
-        console.log("Create SECTION API ERROR...". error)
+        console.log("Create SECTION API ERROR...", error)
         toast.error(error.message);
 
     }
@@ -146,7 +146,7 @@ export const createSubSection =  async (data, token)=>{
 
     }catch(error){
 
-        console.log(" create sub- SECTION API ERROR...". error)
+        console.log(" create sub- SECTION API ERROR...", error)
         toast.error(error.message);
 
     }

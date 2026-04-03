@@ -8,8 +8,8 @@ const {createCourse ,
      editCourse,
      getFullCourseDetails,
      getInstructorCourses,
-     deleteCourse
-    
+     deleteCourse,
+     updateCourseProgress
     } = require("../controller/Course");
 
 
@@ -111,4 +111,6 @@ router.post("/createRating", auth, isStudent, createRating);
 router.get("/getAverageRating", getAverageRating);
 router.get("/getReviews", getALLRating);
 
-module.exports =router;
+router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
+
+module.exports = router;

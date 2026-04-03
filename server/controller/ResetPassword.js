@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const mailSender = require("../Utils/mailSender");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 //resetPassword token
 exports.resetPasswordToken = async(req, res)=>{
